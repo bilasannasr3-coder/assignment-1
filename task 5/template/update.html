@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>update page</title>
+        <style>
+            
+       body {
+            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+             min-height: 100vh;
+             padding: 20px;
+            }
+             .update-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 30px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.update-title {
+    text-align: center;
+    color: #333;
+    margin-bottom: 30px;
+    font-size: 24px;
+}
+
+.update-form {
+    margin: 20px 0;
+}
+
+.update-input {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+
+.update-input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.update-btn {
+    width: 100%;
+    padding: 12px;
+    background: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.update-btn:hover {
+    background: #45a049;
+}
+
+.back-link {
+    display: block;
+    text-align: center;
+    margin-top: 20px;
+    color: #666;
+    text-decoration: none;
+}
+
+.back-link:hover {
+    color: #333;}
+
+  
+        </style>
+    </head>
+    <body>
+        <div class="update-container">
+        <h1 class="update-title">Update Task</h1>
+        <hr>
+        
+        <form action="/update/{{task.id}}" method="POST" class="update-form" >
+            <input type="text" name="content" id="content"  class = "update-input" value="{{task.content}}">
+            <input type="submit" value="Update Task" class="update-btn">
+            
+        </form>
+        
+        <a href="/" class="back-link">Back to Tasks</a>
+        </div>
+    </body>
+</html>
