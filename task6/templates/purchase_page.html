@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>قائمة المشتريات اليومية</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            direction: rtl;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+            margin-bottom: 10px;
+        }
+        .description {
+            text-align: center;
+            color: #7f8c8d;
+            margin-bottom: 30px;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .message {
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+        .error {
+            background-color: #ffebee;
+            color: #c62828;
+            border: 1px solid #ffcdd2;
+        }
+        .success {
+            background-color: #e8f5e9;
+            color: #2e7d32;
+            border: 1px solid #c8e6c9;
+        }
+        .form-section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background: #2980b9;
+        }
+        .items-list {
+            margin: 30px 0;
+        }
+        .item {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .item-info {
+            flex-grow: 1;
+        }
+        .item-name {
+            font-weight: bold;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+        .item-time {
+            font-size: 12px;
+            color: #7f8c8d;
+        }
+        .delete-btn {
+            background: #e74c3c;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        .delete-btn:hover {
+            background: #c0392b;
+        }
+        .empty-state {
+            text-align: center;
+            color: #7f8c8d;
+            padding: 40px 20px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        .clear-btn {
+            background: #e67e22;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .clear-btn:hover {
+            background: #d35400;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛒 قائمة المشتريات اليومية</h1>
+        <p class="description">أدير قائمة مشترياتك بسهولة وكفاءة</p>
+        
+        <!-- الإحصائيات -->
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number">{{ items|length }}</div>
+                <div>عدد العناصر</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">{{ items|length }}</div>
+                <div>للشراء</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number">0</div>
+                <div>تم الشراء</div>
+            </div>
+        </div>
+        
+        <!-- الرسائل -->
+        {% if error %}
+        <div class="message error">{{ error }}</div>
+        {% endif %}
+        
+        <!-- نموذج الإضافة -->
+        <div class="form-section">
+            <h3>إضافة عنصر جديد</h3>
+            <form action="/add_item" method="post">
+                <div class="form-group">
+                    <label for="item_name">اسم العنصر:</label>
+                    <input type="text" id="item_name" name="item_name" 
+                           placeholder="أدخل اسم العنصر الذي تريد شراءه..." 
+                           value="{{ item_name if item_name else '' }}" 
+                           required>
+                </div>
+                <button type="submit">➕ إضافة إلى القائمة</button>
+            </form>
+        </div>
+        
+        <!-- قائمة العناصر -->
+        <div class="items-list">
+            <h3>قائمة المشتريات الحالية</h3>
+            
+            {% if items %}
+                {% for item in items %}
+                <div class="item">
+                    <div class="item-info">
+                        <div class="item-name">{{ item.name }}</div>
+                        <div class="item-time">تم الإضافة: {{ item.added_time }}</div>
+                    </div>
+                    <a href="/remove_item/{{ loop.index0 }}" class="delete-btn" 
+                       onclick="return confirm('هل أنت متأكد من حذف {{ item.name }}؟')">
+                       🗑️ حذف
+                    </a>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <h3>📝 القائمة فارغة</h3>
+                    <p>لم تقم بإضافة أي عناصر إلى قائمة المشتريات بعد.</p>
+                    <p>استخدم النموذج أعلاه لإضافة عناصر جديدة.</p>
+                </div>
+            {% endif %}
+        </div>
+        
+        <!-- زر مسح الكل -->
+        {% if items %}
+        <div style="text-align: center;">
+            <a href="/clear_all" class="clear-btn" 
+               onclick="return confirm('هل أنت متأكد من مسح القائمة بالكامل؟')">
+               🗑️ مسح القائمة بالكامل
+            </a>
+        </div>
+        {% endif %}
+    </div>
+
+    <script>
+        // تأكيد قبل الحذف
+        function confirmAction(message) {
+            return confirm(message);
+        }
+    </script>
+</body>
+</html>
+
+<!-- مشان يشتغل الكود بشكل صحيح لازم يكون فلاسك شغال في الخلفية يعني cmd مفتوحة-->
+ <!--افتح المتصفح على رابط //localhost:5000-->
